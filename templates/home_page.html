@@ -1,11 +1,26 @@
 <html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      img {
+          display: block;
+          margin-left: auto;
+          margin-right: auto;
+        }
+    </style>
+  </head>
   <body>
-	   <h1>Our Home Page</h1>
-	   A list
+	   <h1 align="center">Daddy's Marketplace</h1>
+     <img src=https://i.ytimg.com/vi/quI772XuCpo/maxresdefault.jpg
+          alt="Ryan Reynolds"
+          width="25%"
+          height="25%"
+          style="width:25%">
+     <hr>
+	   <p>Posts:</p>
+     <hr>
 	   <ul>
-		         {% for i in range(num) %}
-			          <li>bullet {{i}}</li>
-		         {% endfor %}
+             <button>Make a post!</button>
 	   </ul>
 </body>
 <script type='text/javascript' src="{{url_for('static', filename='js/home_page.js')}}"></script>
