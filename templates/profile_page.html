@@ -1,54 +1,22 @@
-<html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
-      .navbar {
-        width: 100%;
-        background-color: #555;
-        overflow: auto;
-      }
+{% extends 'base.html' %}
 
-      .navbar a {
-        float: left;
-        padding: 12px;
-        color: white;
-        text-decoration: none;
-        font-size: 17px;
-      }
+{% block content %}
 
-      .navbar a:hover {
-        background-color: #000;
-      }
+{% if name %}
+  <h1> Hello {{ name }}!! </h1>
+{% else %}
+  <h1>Sign In: </h1>
+  <br/>
+  <form method="POST">
+    {{ form.hidden_tag() }}
+    
+    {{ form.name.label }}
+    {{ form.name() }}
+    <br/>
+    {{ form.submit() }}
 
-      .active {
-        background-color: #04AA6D;
-      }
+  </form>
 
-      @media screen and (max-width: 500px) {
-        .navbar a {
-          float: none;
-          display: block;
-        }
-      }
-      img {
-          display: block;
-          margin-left: auto;
-          margin-right: auto;
-        }
-    </style>
-  </head>
-  <body>
-    <div class="navbar">
-      <a href=/><i class="fa fa-fw fa-home"></i> Home</a>
-      <a class="active" href="profile_page"><i class="fa fa-fw fa-user"></i> Profile</a>
-      <a href="settings_page"><i class="fa fa-fw fa-gears"></i> Settings</a>
-    </div>
-    <h1 align="center">Daddy's Marketplace</h1>
-    <img src=https://i.ytimg.com/vi/quI772XuCpo/maxresdefault.jpg
-         alt="Ryan Reynolds"
-         style="width:25%">
-    <hr>
-    <p>Profile:</p>
-  </body>
-</html>
+{% endif %}
+
+{% endblock %}
