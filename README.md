@@ -6,4 +6,4 @@ Check out https://www.instructables.com/Setting-Up-a-Flask-Application/?adlt=str
 
 We have a basic template set up, but there is currently no database.
 
-testing.
+The command to run the web application from terminal is currently "flask --app flask-project run".
