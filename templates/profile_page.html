@@ -1,3 +1,13 @@
+<!-- This is to construct the navbar and update the active state to whatever
+     page it is on. -->
+<head>
+  <div class="navbar">
+    <a href=/><i class="fa fa-fw fa-home"></i> Home</a>
+    <a class="active" href="profile_page"><i class="fa fa-fw fa-user"></i> Profile</a>
+    <a href="settings_page"><i class="fa fa-fw fa-gears"></i> Settings</a>
+  </div>
+</head>
+
 {% extends 'base.html' %}
 
 {% block content %}
@@ -9,7 +19,7 @@
   <br/>
   <form method="POST">
     {{ form.hidden_tag() }}
-    
+
     {{ form.name.label }}
     {{ form.name() }}
     <br/>
