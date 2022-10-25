@@ -1,9 +1,9 @@
 from flask import Flask, render_template
 from home.views import home_view
-from flask_wtf import FlaskForm	
-from wtforms import StringField, SubmitField #can also add ImageField
-from wtforms.validators import DataRequired #if you didnt type something in the field it will alert, (there's validators for email addresses)
-from flask_sqlalchemy import SQLAlchemy #database 
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, BooleanField, SubmitField #can also add ImageField
+from wtforms.validators import DataRequired, InputRequired, Email, Length #if you didnt type something in the field it will alert, (there's validators for email addresses)
+from flask_sqlalchemy import SQLAlchemy #database
 from datetime import datetime #keeps track of things added to the database
 
 
@@ -16,7 +16,7 @@ class NamerForm(FlaskForm):
 	submit = SubmitField("Submit")
 
 #Create profile Page
-@app.route('/profile_page', methods=['GET', 'POST'])
+@app.route('/login_page', methods=['GET', 'POST'])
 def name():
 	name = None
 	form = NamerForm()
@@ -25,7 +25,7 @@ def name():
 		name = form.name.data
 		form.name.data = ''
 
-	return render_template("profile_page.html",
+	return render_template("login_page.html",
 		name = name,
 		form = form)
 
@@ -41,7 +41,7 @@ def index():
 @app.route('/user/<name>')
 
 def user(name):
-	return render_template("profile_page.html", name=name)
+	return render_template("login_page.html", name=name)
 
 
 # #add database
