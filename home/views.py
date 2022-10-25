@@ -13,3 +13,7 @@ def display_profile_page():
 @home_view.route('/settings_page') # Route for the settings page
 def display_settings_page():
 	return render_template('settings_page.html', num=10)
+
+@home_view.route('/login_page') # Route for the settings page
+def display_login_page():
+	return render_template('login_page.html', num=10)
