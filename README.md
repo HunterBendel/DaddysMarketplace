@@ -17,3 +17,4 @@ Packages to install are:
   6. flask_sqlalchemy
   7. werkzeug.security
   8. flask_login
+  9. sqlite3
