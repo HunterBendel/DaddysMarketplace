@@ -1,5 +1,6 @@
+import json
 import os
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, jsonify
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField #can also add ImageField
@@ -7,6 +8,7 @@ from wtforms.validators import InputRequired, Email, Length #if you didnt type s
 from flask_sqlalchemy import SQLAlchemy #database
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_change_password import ChangePassword, ChangePasswordForm, SetPasswordForm
 
 app = Flask(__name__)  # Create application object
 app.config['SECRET_KEY'] = 'This is my super secret key'
@@ -18,6 +20,8 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+flask_change_password = ChangePassword(min_password_length=8, rules=dict(long_password_override=2))
+flask_change_password.init_app(app)
 
 with app.app_context():
     db.create_all()
@@ -90,6 +94,30 @@ def signup():
 
 	return render_template('signup_page.html', form=form)
 
+@app.route('/changed/<title>/<new_password>')
+@login_required
+def page_changed(title, new_password=''):
+    return render_template('changed.html', title=title, new_password=new_password)
+
+@app.route('/change_password', methods=['GET', 'POST'])
+@login_required
+def page_change_password():
+    title = 'Change Password'
+    form = ChangePasswordForm(username=current_user.username, changing=True, title=title)
+    if form.validate_on_submit():
+        valid = flask_change_password.verify_password_change_form(form)
+        if valid:
+            hashed_password = generate_password_hash(form.password.data, method='sha256')
+            current_user.password = hashed_password
+            db.session.commit()
+            return redirect(url_for('page_changed', title='changed', new_password=form.password.data))
+
+        return redirect(url_for('page_change_password'))
+    password_template = flask_change_password.change_password_template(form, submit_text='Change')
+    return render_template('change_password.html', password_template=password_template, title=title, form=form,
+                           user=dict(username=current_user.username),
+                           )
+
 @app.route('/logout')
 @login_required
 def logout():
@@ -98,28 +126,3 @@ def logout():
 
 if __name__ == '__main__':
 	app.run(debug=True)  # Run our application
-
-# #add database
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
-# #Initialize The Database
-# db = SQLAlchemy(app)
-# #Create Model
-# class User(db.Model):
-# 	id = db.Column(db.Integer,primary_key=True) #will assign id automatically
-# 	username = db.Column(db.String, unique=True, nullable=False)
-# 	name = db.Column(db.String(200), nullable=False) #nullable=False means that their name cant be blank
-# 	email = db.Column(db.String(120), nullable=False, unique=True) # unique=true, email can only be used once.
-# 	date_added = db.Column(db.DateTime, default = datetime.utcnow)
-
-
-# 	def __repr__(self):
-# 		return '<Name %r>' % self.name
-
-
-# # with app.app_context():
-# # 	db.create_all()
-
-# # 	db.session.add(User(username="example"))
-# # 	db.session.commit()
-
-# # 	users = db.session.execute(db.select(User)).scalars()
