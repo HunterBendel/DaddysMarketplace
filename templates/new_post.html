@@ -8,10 +8,27 @@
     <a class="split" href="logout"><i class="fa fa-fw fa-sign-out"></i> Log out</a>
     <a class="splitb">Welcome, {{ name }}</a>
   </div>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 {% extends 'base.html' %}
 
 {% block content %}
+
+<body>
+  <title>New Post</title>
+  <h1>New Post</h1>
+  <form method="POST">
+    <label for="title">Title:</label>
+    <input type="text" name="title" id="title" />
+
+    <label for="content">Content: </label>
+    <textarea name="content" id="content"></textarea>
+
+    <input type="submit" value="Create post" />
+  </form>
+</body>
 
 {% endblock %}
