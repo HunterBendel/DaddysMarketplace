@@ -127,6 +127,14 @@ def page_change_password():
 def new_post():
     return render_template('new_post.html', name=current_user.username)
 
+
+#Matthew
+@app.route('/about')
+@login_required
+def about():
+    return render_template('about.html', name=current_user.username)
+
+
 @app.route('/logout')
 @login_required
 def logout():
