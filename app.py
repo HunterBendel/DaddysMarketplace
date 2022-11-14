@@ -9,6 +9,7 @@ from flask_sqlalchemy import SQLAlchemy #database
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_change_password import ChangePassword, ChangePasswordForm, SetPasswordForm
+import sqlite3
 
 app = Flask(__name__)  # Create application object
 app.config['SECRET_KEY'] = 'This is my super secret key'
@@ -34,6 +35,15 @@ class User(UserMixin, db.Model):
     first = db.Column(db.String(80))
     last = db.Column(db.String(80))
 
+#Do not use this table. it is not the implementation of the post table
+#The post Table was added via command line and is probably different
+#class Post(db.Model):
+#    username = db.Column(db.String(15), primary_key = True)
+#    caption = db.Column(db.String(256))
+#    date = db.Column(db.String(15))
+#    itemsSold = db.Column(db.String(50))
+
+
 @login_manager.user_loader
 def load_user(user_id):
 	return User.query.get(int(user_id))
@@ -57,7 +67,8 @@ def index():
 @app.route('/home')
 @login_required
 def home():
-    return render_template('home_page.html', name=current_user.username)
+    data = getPostData()
+    return render_template('home_page.html', name=current_user.username, all_data = data)
 
 @app.route('/profile')
 @login_required
@@ -132,6 +143,28 @@ def new_post():
 def logout():
 	logout_user()
 	return redirect(url_for('index'))
+
+def getPostData():
+    database = sqlite3.connect("user_data.db")
+    cursor = database.cursor()
+
+    #If you want to quickly enter stuff into the database uncomment a line below and follow same format
+    #It goes Username, caption of image, date entered, alt text for image
+    #if you want the items to stay in database uncomment the commit line
+    #Important please comment/remove lines when you no longer want to add stuff
+    #Removing duplicate posts in the table would be a hassle
+
+    #cursor.execute("INSERT INTO Post VALUES ('Methuselah Honeysuckle','If anyone needs a bunch of notebooks I accidently got too many', '10/31/22','notebooks')")
+    #cursor.execute("INSERT INTO Post VALUES ('11lb. Black Forest Ham','Got a bunch of free clothes for anyone wanting some. DM me if interested', '11/4/22','clothes')")
+    #database.commit()
+    
+    cursor.execute("SELECT * FROM Post")
+    post_data = cursor.fetchall()
+    print("HOWDY HOWDY HOWDY")
+    for row in post_data:
+        print(row)
+
+    return post_data
 
 if __name__ == '__main__':
 	app.run(debug=True)  # Run our application
