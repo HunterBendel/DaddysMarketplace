@@ -14,21 +14,33 @@
 </head>
 
 {% extends 'base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}
+New Post
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='signin.css')}}">
+{% endblock %}
 
 {% block content %}
 
 <body>
   <title>New Post</title>
-  <h1>New Post</h1>
-  <form method="POST">
-    <label for="title">Title:</label>
-    <input type="text" name="title" id="title" />
+  <div class="container">
 
-    <label for="content">Content: </label>
-    <textarea name="content" id="content"></textarea>
+    <form class="form-signin" method="POST" enctype="multipart/form-data" action="/new_post">
+      <h2 class="form-signin-heading">New Post</h2>
+      {{ form.hidden_tag() }}
+      {{ wtf.form_field(form.file) }}
+      {{ wtf.form_field(form.caption) }}
+      {{ wtf.form_field(form.itemCategory) }}
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Post!</button>
+    </form>
 
-    <input type="submit" value="Create post" />
-  </form>
+  </div> <!-- /container -->
 </body>
 
 {% endblock %}
