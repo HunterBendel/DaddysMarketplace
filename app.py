@@ -1,15 +1,18 @@
 import json
 import os
-from flask import Flask, render_template, redirect, url_for, jsonify
+import sqlite3
+from io import BytesIO
+from flask import Flask, render_template, redirect, url_for, jsonify, request, send_file
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField #can also add ImageField
+from datetime import datetime
+from wtforms import StringField, PasswordField, BooleanField, FileField
 from wtforms.validators import InputRequired, Email, Length #if you didnt type something in the field it will alert, (there's validators for email addresses)
 from flask_sqlalchemy import SQLAlchemy #database
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_change_password import ChangePassword, ChangePasswordForm, SetPasswordForm
-import sqlite3
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)  # Create application object
 app.config['SECRET_KEY'] = 'This is my super secret key'
@@ -28,6 +31,7 @@ with app.app_context():
     db.create_all()
 
 class User(UserMixin, db.Model):
+    __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(15), unique=True)
     email = db.Column(db.String(50), unique=True)
@@ -37,16 +41,24 @@ class User(UserMixin, db.Model):
 
 #Do not use this table. it is not the implementation of the post table
 #The post Table was added via command line and is probably different
-#class Post(db.Model):
-#    username = db.Column(db.String(15), primary_key = True)
-#    caption = db.Column(db.String(256))
-#    date = db.Column(db.String(15))
-#    itemsSold = db.Column(db.String(50))
+class Post(db.Model):
+    __tablename__ = "post"
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String, db.ForeignKey('user.username'))
+    file = db.Column(db.LargeBinary)
+    caption = db.Column(db.String(256))
+    itemCategory = db.Column(db.String(50))
+    date = db.Column(db.DateTime, nullable=False)
 
 
 @login_manager.user_loader
 def load_user(user_id):
 	return User.query.get(int(user_id))
+
+class PostForm(FlaskForm):
+    file = FileField('image')
+    caption = StringField('caption', validators=[InputRequired(), Length(min=4, max=256)])
+    itemCategory = StringField('item category', validators=[InputRequired(), Length(min=4, max=15)])
 
 class LoginForm(FlaskForm):
 	username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
@@ -133,10 +145,18 @@ def page_change_password():
                            user=dict(username=current_user.username),
                            )
 
-@app.route('/new_post')
+@app.route('/new_post', methods=['GET', 'POST'])
 @login_required
 def new_post():
-    return render_template('new_post.html', name=current_user.username)
+    title = 'New Post'
+    form = PostForm()
+    if form.validate_on_submit():
+        new_post = Post(username=current_user.username, file=form.file.data.read(), caption=form.caption.data, itemCategory=form.itemCategory.data, date=datetime.now())
+        db.session.add(new_post)
+        db.session.commit()
+        return redirect(url_for('home'))
+
+    return render_template('new_post.html', form=form, name=current_user.username)
 
 
 #Matthew
@@ -165,7 +185,7 @@ def getPostData():
     #cursor.execute("INSERT INTO Post VALUES ('Methuselah Honeysuckle','If anyone needs a bunch of notebooks I accidently got too many', '10/31/22','notebooks')")
     #cursor.execute("INSERT INTO Post VALUES ('11lb. Black Forest Ham','Got a bunch of free clothes for anyone wanting some. DM me if interested', '11/4/22','clothes')")
     #database.commit()
-    
+
     cursor.execute("SELECT * FROM Post")
     post_data = cursor.fetchall()
     print("HOWDY HOWDY HOWDY")
