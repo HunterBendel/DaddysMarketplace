@@ -1,6 +1,7 @@
 import json
 import os
 import sqlite3
+import base64
 from io import BytesIO
 from flask import Flask, render_template, redirect, url_for, jsonify, request, send_file
 from flask_bootstrap import Bootstrap
@@ -45,10 +46,10 @@ class Post(db.Model):
     __tablename__ = "post"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, db.ForeignKey('user.username'))
-    file = db.Column(db.LargeBinary)
+    file = db.Column(db.String)
     caption = db.Column(db.String(256))
     itemCategory = db.Column(db.String(50))
-    date = db.Column(db.DateTime, nullable=False)
+    date = db.Column(db.String)
 
 
 @login_manager.user_loader
@@ -151,13 +152,12 @@ def new_post():
     title = 'New Post'
     form = PostForm()
     if form.validate_on_submit():
-        new_post = Post(username=current_user.username, file=form.file.data.read(), caption=form.caption.data, itemCategory=form.itemCategory.data, date=datetime.now())
+        new_post = Post(username=current_user.username, file=base64.b64encode(form.file.data.read()).decode("UTF-8"), caption=form.caption.data, itemCategory=form.itemCategory.data, date=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         db.session.add(new_post)
         db.session.commit()
         return redirect(url_for('home'))
 
     return render_template('new_post.html', form=form, name=current_user.username)
-
 
 #Matthew
 @app.route('/about')
