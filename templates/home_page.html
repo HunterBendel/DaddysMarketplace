@@ -26,18 +26,18 @@
     <!--post[2]: The date the post was made-->
     <!--post[3]: Alternate text for image-->
     {% for post in all_data%}
-    <p1 style="font-size:25px">{{post[0]}}</p1>
-    <p2>{{post[2]}}</p2>
+    <p1 style="font-size:25px">{{post[1]}}</p1>
+    <p2>{{post[5]}}</p2>
     <br>
     <img style="float:left;"
-         src="cdftvgybhun"
-         alt="{{post[3]}}"
+         src="data:image/png;charset=utf-8;base64,{{post[2]}}"
+         alt="{{post[4]}}"
          width="125px"><br clear="all"/>
-    <p>{{post[1]}}</p>
+    <p>{{post[3]}}</p>
     <br><br>
     {% endfor %}
 
-    
+
   <p1 style="font-size:25px">Ghee Buttersnaps</p1>
   <p2>10/23/22</p2>
   <br>
@@ -46,7 +46,7 @@
        alt="textbook"
        width="125px"><br clear="all" />
    <p>Hey there folks. No longer need this. Price is $100</p>
-  
+
   <br><br><br>
 
   <p1 style="font-size:25px">Ovaltine Jenkins</p1>
@@ -57,7 +57,7 @@
        alt="backpack"
        width="125px"><br clear="all" />
    <p>Just got a new backpack and selling this one. DM me your best offer</p>
-  
+
 
    </ul>
    <hr>
@@ -65,4 +65,3 @@
     <button onclick="window.location.href='new_post';">Make a post!</button>
 </body>
 
-{% endblock %}
