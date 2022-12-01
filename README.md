@@ -18,3 +18,4 @@ Packages to install are:
   7. werkzeug.security
   8. flask_login
   9. sqlite3
+  10. base64
