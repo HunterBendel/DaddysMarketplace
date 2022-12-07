@@ -14,6 +14,12 @@
 
 {% block content %}
 
-<!-- insert code here -->
+<br/><br/>
+
+<strong>First Name: </strong>{{ current_user.first}}<br/>
+<strong>Last Name: </strong>{{ current_user.last}}<br/>
+<strong>UserName: </strong>{{ current_user.username}}<br/>
+<strong>User Id: </strong>{{ current_user.id}}<br/>
+<strong>Email: </strong>{{ current_user.email}}<br/>
 
 {% endblock %}
