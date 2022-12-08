@@ -189,10 +189,13 @@ def getPostData():
     cursor.execute("SELECT * FROM Post")
     post_data = cursor.fetchall()
     print("HOWDY HOWDY HOWDY")
-    for row in post_data:
-        print(row)
+    
+    #for row in post_data:
+        #print(row)
 
-    return post_data
+    reverse = post_data[::-1]
+
+    return reverse
 
 if __name__ == '__main__':
 	app.run(debug=True)  # Run our application
