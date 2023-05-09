@@ -1,10 +1,10 @@
 # DaddysMarketplace
 
-This will be the working repository for our website
+This will be the working repository for the website
 
-Check out https://www.instructables.com/Setting-Up-a-Flask-Application/?adlt=strict&toWww=1&redig=6BB8DA9AB49F42AEAF9613C41343BD06 for instructions on Flask setup and how to run our web application.
+Check out https://www.instructables.com/Setting-Up-a-Flask-Application/?adlt=strict&toWww=1&redig=6BB8DA9AB49F42AEAF9613C41343BD06 for instructions on Flask setup and how to run the web application.
 
-We have a basic template set up, along with a functional account creation and login system.
+The basic features of the site are implemented, such as account creation, account login, posting to the feed, etc.
 
 The command to run the web application from terminal is currently "python3 app.py" or "py app.py".
 
